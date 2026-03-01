@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum TenantRole {
+  ADMIN
+  USER
+}
+
+model Tenant {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+
+  memberships TenantUser[]
+  gaConnections GAConnection[]
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+
+  memberships TenantUser[]
+  gaConnections GAConnection[]
+}
+
+model TenantUser {
+  tenantId  String
+  userId    String
+  role      TenantRole @default(USER)
+  createdAt DateTime   @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([tenantId, userId])
+  @@index([userId])
+}
+
+model GAConnection {
+  id            String   @id @default(cuid())
+  tenantId      String
+  userId        String
+
+  googleSub     String
+  email         String
+
+  accessToken   String   @db.Text
+  refreshToken  String?  @db.Text
+  expiresAt     DateTime?
+
+  createdAt     DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([userId])
+}
+
+model MetricSnapshot {
+  id           String   @id @default(cuid())
+  tenantId     String
+  propertyId   String
+  startDate    String
+  endDate      String
+
+  sessions     Int
+  totalUsers   Int
+  newUsers     Int
+  conversions  Int
+  eventCount   Int
+
+  createdAt    DateTime @default(now())
+
+  tenant       Tenant   @relation(fields: [tenantId], references: [id])
+
+  @@index([tenantId])
+}
+
+model SelectedProperty {
+  id          String   @id @default(cuid())
+  tenantId    String
+  propertyId  String
+  accountId   String
+  createdAt   DateTime @default(now())
+
+  tenant      Tenant   @relation(fields: [tenantId], references: [id])
+
+  @@unique([tenantId])
+}

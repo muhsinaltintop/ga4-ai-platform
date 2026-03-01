@@ -9,10 +9,7 @@ export async function GET() {
       orderBy: { createdAt: "desc" },
     });
 
-    const propertyId = process.env.PROPERTY_ID; // şimdilik hardcode
-
-    console.log(propertyId);
-    
+    const propertyId = process.env.PROPERTY_ID; // şimdilik hardcode    
 
     const response = await fetch(
       `https://analyticsdata.googleapis.com/v1beta/${propertyId}:runReport`,

@@ -3,7 +3,6 @@ import { PrismaClient } from "@prisma/client";
 
 
 const prisma = new PrismaClient();
-console.log(Object.keys(prisma));
 
 function decodeJwt(token: string) {
   const payload = token.split(".")[1];

@@ -1,9 +1,19 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 export default async function Home() {
-  const tenants = await prisma.tenant.findMany({
+  type TenantWithMemberships = Prisma.TenantGetPayload<{
+    include: {
+      memberships: {
+        include: {
+          user: true;
+        };
+      };
+    };
+  }>;
+
+  const tenants: TenantWithMemberships[] = await prisma.tenant.findMany({
     include: {
       memberships: {
         include: {

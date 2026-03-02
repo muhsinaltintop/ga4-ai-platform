@@ -27,7 +27,7 @@ export default async function Home() {
     <div style={{ padding: 40 }}>
       <h1>GA4 AI Platform</h1>
 
-      {tenants.map((tenant) => (
+       {tenants.map((tenant: (typeof tenants)[number]) => (
         <div key={tenant.id} style={{ marginBottom: 20 }}>
           <h2>{tenant.name}</h2>
 

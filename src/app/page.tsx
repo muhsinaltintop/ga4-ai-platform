@@ -32,7 +32,7 @@ export default async function Home() {
           <h2>{tenant.name}</h2>
 
           <ul>
-            {tenant.memberships.map((membership) => (
+            {tenant.memberships.map((membership: (typeof tenant.memberships)[number]) => (
               <li key={membership.userId}>
                 {membership.user.email} — {membership.role}
               </li>

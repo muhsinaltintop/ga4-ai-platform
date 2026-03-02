@@ -19,6 +19,8 @@ model Tenant {
 
   memberships TenantUser[]
   gaConnections GAConnection[]
+  metricSnapshots MetricSnapshot[]
+  selectedProperties SelectedProperty[]
 }
 
 model User {
